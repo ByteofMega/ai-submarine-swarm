@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<!--
+  wolfsub: a small submarine for the wolf pack (1 m long). Based on Nemo.
+  Body frame: X forward, Y left, Z up.
+
+  Buoyancy: the hull is a tube, 1.0 m long, 0.14 m radius = 0.0616 m3, which
+  pushes aside 61.6 kg of water. Total mass is 61.4 kg, so the sub floats up
+  very slowly if the thrusters stop (a safety choice).
+  The centre of mass sits 5 cm below the middle of the hull, which keeps the
+  sub upright by itself.
+
+  No names are fixed in this file. Gazebo builds the topic names from the name
+  the sub gets in the world (sub1, sub2, ...), so many subs can use this file.
+-->
+<sdf version="1.9">
+  <model name="wolfsub">
+
+    <link name="base_link">
+      <inertial>
+        <pose>0.002 0 -0.05 0 0 0</pose>
+        <mass>61.0</mass>
+        <inertia>
+          <ixx>0.60</ixx><iyy>5.38</iyy><izz>5.38</izz>
+          <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <!-- The only part that touches things and displaces water -->
+      <collision name="hull_collision">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.14</radius><length>1.0</length></cylinder></geometry>
+      </collision>
+
+      <!-- Looks: tube hull, round nose and tail, small tower on top -->
+      <visual name="hull">
+        <pose>0 0 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.14</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.25 0.27 0.3 1</ambient><diffuse>0.25 0.27 0.3 1</diffuse></material>
+      </visual>
+      <visual name="nose">
+        <pose>0.5 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.14</radius></sphere></geometry>
+        <material><ambient>0.25 0.27 0.3 1</ambient><diffuse>0.25 0.27 0.3 1</diffuse></material>
+      </visual>
+      <visual name="tail">
+        <pose>-0.5 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.14</radius></sphere></geometry>
+        <material><ambient>0.25 0.27 0.3 1</ambient><diffuse>0.25 0.27 0.3 1</diffuse></material>
+      </visual>
+      <visual name="tower">
+        <pose>0.1 0 0.19 0 0 0</pose>
+        <geometry><box><size>0.28 0.07 0.14</size></box></geometry>
+        <material><ambient>0.18 0.2 0.22 1</ambient><diffuse>0.18 0.2 0.22 1</diffuse></material>
+      </visual>
+
+      <!-- Front camera: 320x240, 5 pictures per second, sees up to 25 m -->
+      <sensor name="camera" type="camera">
+        <pose>0.66 0 0 0 0 0</pose>
+        <update_rate>5</update_rate>
+        <always_on>true</always_on>
+        <camera>
+          <horizontal_fov>1.4</horizontal_fov>
+          <image><width>320</width><height>240</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>25</far></clip>
+        </camera>
+      </sensor>
+
+      <!-- Forward sonar: 9 beams spread over +-40 degrees -->
+      <sensor name="sonar" type="gpu_lidar">
+        <pose>0.66 0 -0.05 0 0 0</pose>
+        <update_rate>10</update_rate>
+        <always_on>true</always_on>
+        <lidar>
+          <scan>
+            <horizontal><samples>9</samples><resolution>1</resolution>
+              <min_angle>-0.7</min_angle><max_angle>0.7</max_angle></horizontal>
+            <vertical><samples>1</samples><resolution>1</resolution>
+              <min_angle>0</min_angle><max_angle>0</max_angle></vertical>
+          </scan>
+          <range><min>0.2</min><max>15</max><resolution>0.01</resolution></range>
+        </lidar>
+      </sensor>
+
+      <!-- Altimeter: one beam pointing straight down, gives height above the seabed -->
+      <sensor name="altimeter" type="gpu_lidar">
+        <pose>0 0 -0.2 0 1.5708 0</pose>
+        <update_rate>10</update_rate>
+        <always_on>true</always_on>
+        <lidar>
+          <scan>
+            <horizontal><samples>1</samples><resolution>1</resolution>
+              <min_angle>0</min_angle><max_angle>0</max_angle></horizontal>
+            <vertical><samples>1</samples><resolution>1</resolution>
+              <min_angle>0</min_angle><max_angle>0</max_angle></vertical>
+          </scan>
+          <range><min>0.1</min><max>20</max><resolution>0.01</resolution></range>
+        </lidar>
+      </sensor>
+
+      <!-- IMU: measures tilt and turning speed -->
+      <sensor name="imu" type="imu">
+        <update_rate>50</update_rate>
+        <always_on>true</always_on>
+      </sensor>
+    </link>
+
+    <!-- ===== Thrusters: each is a small propeller on a spinning joint ===== -->
+    <!-- Rear left / rear right push along X (forward). Uneven thrust turns the sub. -->
+    <link name="prop_rear_left">
+      <pose>-0.6 0.15 -0.04 0 0 0</pose>
+      <inertial><mass>0.1</mass>
+        <inertia><ixx>0.0001</ixx><iyy>0.0001</iyy><izz>0.0001</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <visual name="v"><pose>0 0 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.05</radius><length>0.04</length></cylinder></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+    </link>
+    <joint name="rear_left_joint" type="revolute">
+      <parent>base_link</parent><child>prop_rear_left</child>
+      <axis><xyz>1 0 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+
+    <link name="prop_rear_right">
+      <pose>-0.6 -0.15 -0.04 0 0 0</pose>
+      <inertial><mass>0.1</mass>
+        <inertia><ixx>0.0001</ixx><iyy>0.0001</iyy><izz>0.0001</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <visual name="v"><pose>0 0 0 0 1.5708 0</pose>
+        <geometry><cylinder><radius>0.05</radius><length>0.04</length></cylinder></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+    </link>
+    <joint name="rear_right_joint" type="revolute">
+      <parent>base_link</parent><child>prop_rear_right</child>
+      <axis><xyz>1 0 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+
+    <!-- Front / back vertical thrusters push along Z (up), under the hull. -->
+    <link name="prop_vert_front">
+      <pose>0.3 0 -0.16 0 0 0</pose>
+      <inertial><mass>0.1</mass>
+        <inertia><ixx>0.0001</ixx><iyy>0.0001</iyy><izz>0.0001</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <visual name="v">
+        <geometry><cylinder><radius>0.05</radius><length>0.03</length></cylinder></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+    </link>
+    <joint name="vert_front_joint" type="revolute">
+      <parent>base_link</parent><child>prop_vert_front</child>
+      <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+
+    <link name="prop_vert_back">
+      <pose>-0.3 0 -0.16 0 0 0</pose>
+      <inertial><mass>0.1</mass>
+        <inertia><ixx>0.0001</ixx><iyy>0.0001</iyy><izz>0.0001</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+      </inertial>
+      <visual name="v">
+        <geometry><cylinder><radius>0.05</radius><length>0.03</length></cylinder></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material></visual>
+    </link>
+    <joint name="vert_back_joint" type="revolute">
+      <parent>base_link</parent><child>prop_vert_back</child>
+      <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+
+    <!-- One Thruster plugin per propeller. Force is given in newtons. -->
+    <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+      <joint_name>rear_left_joint</joint_name>
+      <thrust_coefficient>0.004422</thrust_coefficient><fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter><velocity_control>true</velocity_control>
+      <max_thrust_cmd>35</max_thrust_cmd><min_thrust_cmd>-35</min_thrust_cmd>
+    </plugin>
+    <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+      <joint_name>rear_right_joint</joint_name>
+      <thrust_coefficient>0.004422</thrust_coefficient><fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter><velocity_control>true</velocity_control>
+      <max_thrust_cmd>35</max_thrust_cmd><min_thrust_cmd>-35</min_thrust_cmd>
+    </plugin>
+    <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+      <joint_name>vert_front_joint</joint_name>
+      <thrust_coefficient>0.004422</thrust_coefficient><fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter><velocity_control>true</velocity_control>
+      <max_thrust_cmd>35</max_thrust_cmd><min_thrust_cmd>-35</min_thrust_cmd>
+    </plugin>
+    <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+      <joint_name>vert_back_joint</joint_name>
+      <thrust_coefficient>0.004422</thrust_coefficient><fluid_density>1000</fluid_density>
+      <propeller_diameter>0.1</propeller_diameter><velocity_control>true</velocity_control>
+      <max_thrust_cmd>35</max_thrust_cmd><min_thrust_cmd>-35</min_thrust_cmd>
+    </plugin>
+
+    <!-- Water drag on the hull. Negative numbers = force against the motion.
+         xU = drag along X, xUabsU = extra drag along X at higher speed, and so on
+         (Y: v, Z: w, roll: p, pitch: q, yaw: r). -->
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <xDotU>0</xDotU><yDotV>0</yDotV><zDotW>0</zDotW>
+      <kDotP>0</kDotP><mDotQ>0</mDotQ><nDotR>0</nDotR>
+      <xU>-10</xU><xUabsU>-40</xUabsU>
+      <yV>-25</yV><yVabsV>-90</yVabsV>
+      <zW>-25</zW><zWabsW>-90</zWabsW>
+      <kP>-4</kP><kPabsP>-6</kPabsP>
+      <mQ>-6</mQ><mQabsQ>-8</mQabsQ>
+      <nR>-5</nR><nRabsR>-8</nRabsR>
+    </plugin>
+
+    <!-- Publishes position, direction and speed in 3D (so depth is included). -->
+    <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+      <dimensions>3</dimensions>
+      <odom_publish_frequency>30</odom_publish_frequency>
+    </plugin>
+
+  </model>
+</sdf>
