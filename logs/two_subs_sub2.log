@@ -1,0 +1,67 @@
+[INFO] [1794693610.325967742] [sub2.helm]: helm ready, waiting for position on "odom"
+[INFO] [1794693610.677898323] [sub2.helm]: position received, holding depth 1.23 m
+[INFO] [1794693611.317896454] [sub2.helm]: depth=  1.19 target=  1.23 error=-0.04 vz=+0.02 heave=  -4.1N alt=none
+[INFO] [1794693612.317773041] [sub2.helm]: depth=  1.19 target=  1.23 error=-0.04 vz=-0.01 heave=  -2.4N alt=none
+[INFO] [1794693613.317795087] [sub2.helm]: depth=  1.20 target=  1.23 error=-0.03 vz=-0.01 heave=  -1.8N alt=none
+[INFO] [1794693614.317790247] [sub2.helm]: depth=  1.21 target=  1.23 error=-0.03 vz=-0.01 heave=  -1.7N alt=none
+[INFO] [1794693615.317831101] [sub2.helm]: depth=  1.21 target=  1.23 error=-0.02 vz=-0.00 heave=  -1.7N alt=none
+[INFO] [1794693616.317775853] [sub2.helm]: depth=  1.22 target=  1.23 error=-0.02 vz=-0.00 heave=  -1.7N alt=none
+[INFO] [1794693617.317767693] [sub2.helm]: depth=  1.22 target=  1.23 error=-0.02 vz=-0.00 heave=  -1.7N alt=none
+[INFO] [1794693617.940797395] [sub2.helm]: new target depth: 9.00 m
+[INFO] [1794693618.317728268] [sub2.helm]: depth=  1.27 target=  9.00 error=-7.73 vz=-0.28 heave= -49.5N alt=none
+[INFO] [1794693619.318005824] [sub2.helm]: depth=  1.70 target=  9.00 error=-7.30 vz=-0.47 heave= -34.5N alt=none
+[INFO] [1794693620.317865947] [sub2.helm]: depth=  2.16 target=  9.00 error=-6.84 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693621.317886762] [sub2.helm]: depth=  2.64 target=  9.00 error=-6.36 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693622.317868029] [sub2.helm]: depth=  3.12 target=  9.00 error=-5.88 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693623.317790301] [sub2.helm]: depth=  3.60 target=  9.00 error=-5.40 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693624.317825400] [sub2.helm]: depth=  4.06 target=  9.00 error=-4.94 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693625.317750905] [sub2.helm]: depth=  4.54 target=  9.00 error=-4.46 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693626.317939049] [sub2.helm]: depth=  5.02 target=  9.00 error=-3.98 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693627.317769442] [sub2.helm]: depth=  5.50 target=  9.00 error=-3.50 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693628.317640156] [sub2.helm]: depth=  5.98 target=  9.00 error=-3.02 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693629.317775381] [sub2.helm]: depth=  6.44 target=  9.00 error=-2.56 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693630.317795785] [sub2.helm]: depth=  6.92 target=  9.00 error=-2.08 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693631.317869573] [sub2.helm]: depth=  7.40 target=  9.00 error=-1.60 vz=-0.48 heave= -34.0N alt=none
+[INFO] [1794693632.317681054] [sub2.helm]: depth=  7.88 target=  9.00 error=-1.12 vz=-0.47 heave= -29.5N alt=none
+[INFO] [1794693633.317740773] [sub2.helm]: depth=  8.29 target=  9.00 error=-0.71 vz=-0.37 heave= -16.0N alt=none
+[INFO] [1794693634.318049718] [sub2.helm]: depth=  8.61 target=  9.00 error=-0.39 vz=-0.26 heave=  -8.2N alt=none
+[INFO] [1794693635.317810708] [sub2.helm]: depth=  8.82 target=  9.00 error=-0.18 vz=-0.17 heave=  -3.7N alt=none
+[INFO] [1794693636.317799601] [sub2.helm]: depth=  8.96 target=  9.00 error=-0.04 vz=-0.10 heave=  -1.6N alt=none
+[INFO] [1794693637.317983226] [sub2.helm]: depth=  9.04 target=  9.00 error=+0.04 vz=-0.05 heave=  -0.9N alt=none
+[INFO] [1794693638.317748254] [sub2.helm]: depth=  9.08 target=  9.00 error=+0.08 vz=-0.02 heave=  -0.9N alt=none
+[INFO] [1794693639.317943196] [sub2.helm]: depth=  9.09 target=  9.00 error=+0.09 vz=-0.01 heave=  -1.1N alt=none
+[INFO] [1794693640.317926201] [sub2.helm]: depth=  9.09 target=  9.00 error=+0.09 vz=+0.00 heave=  -1.3N alt=none
+[INFO] [1794693641.317760984] [sub2.helm]: depth=  9.08 target=  9.00 error=+0.08 vz=+0.01 heave=  -1.5N alt=none
+[INFO] [1794693642.317806449] [sub2.helm]: depth=  9.08 target=  9.00 error=+0.08 vz=+0.01 heave=  -1.5N alt=none
+[INFO] [1794693643.317754259] [sub2.helm]: depth=  9.07 target=  9.00 error=+0.07 vz=+0.01 heave=  -1.6N alt=none
+[INFO] [1794693644.317917769] [sub2.helm]: depth=  9.06 target=  9.00 error=+0.06 vz=+0.01 heave=  -1.6N alt=none
+[INFO] [1794693645.317845343] [sub2.helm]: depth=  9.06 target=  9.00 error=+0.06 vz=+0.01 heave=  -1.6N alt=none
+[INFO] [1794693646.318023230] [sub2.helm]: depth=  9.05 target=  9.00 error=+0.05 vz=+0.01 heave=  -1.6N alt=none
+[INFO] [1794693647.317762497] [sub2.helm]: depth=  9.05 target=  9.00 error=+0.05 vz=+0.00 heave=  -1.6N alt=none
+[INFO] [1794693648.317753114] [sub2.helm]: depth=  9.04 target=  9.00 error=+0.04 vz=+0.00 heave=  -1.6N alt=none
+[INFO] [1794693649.318028792] [sub2.helm]: depth=  9.04 target=  9.00 error=+0.04 vz=+0.00 heave=  -1.6N alt=none
+[INFO] [1794693650.317847496] [sub2.helm]: depth=  9.03 target=  9.00 error=+0.03 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693651.317724648] [sub2.helm]: depth=  9.03 target=  9.00 error=+0.03 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693652.317875749] [sub2.helm]: depth=  9.03 target=  9.00 error=+0.03 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693653.317764277] [sub2.helm]: depth=  9.03 target=  9.00 error=+0.03 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693654.317945840] [sub2.helm]: depth=  9.02 target=  9.00 error=+0.02 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693655.317825159] [sub2.helm]: depth=  9.02 target=  9.00 error=+0.02 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693656.318168107] [sub2.helm]: depth=  9.02 target=  9.00 error=+0.02 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693657.317829932] [sub2.helm]: depth=  9.02 target=  9.00 error=+0.02 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693658.317692201] [sub2.helm]: depth=  9.02 target=  9.00 error=+0.02 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693659.317863322] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693660.317879492] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693661.317781121] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693662.317751967] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693663.317684510] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693664.317703264] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693665.317815312] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693666.317719811] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693667.317746128] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693668.317796262] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693669.317711041] [sub2.helm]: depth=  9.01 target=  9.00 error=+0.01 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693670.317786617] [sub2.helm]: depth=  9.00 target=  9.00 error=+0.00 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693671.317740501] [sub2.helm]: depth=  9.00 target=  9.00 error=+0.00 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693672.317779050] [sub2.helm]: depth=  9.00 target=  9.00 error=+0.00 vz=+0.00 heave=  -1.7N alt=none
+[INFO] [1794693672.917518162] [sub2.helm]: shutdown requested
+[INFO] [1794693673.191010662] [sub2.helm]: shutdown: stop command confirmed by all 4 thrusters
