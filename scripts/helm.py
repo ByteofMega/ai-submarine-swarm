@@ -12,15 +12,27 @@ Start it for sub1:
 Give it a target depth of 5 m (depth is positive downwards):
     ros2 topic pub --once /sub1/helm/target_depth std_msgs/msg/Float64 "{data: 5.0}"
 
+Stop (thrusters off; the sub then floats up slowly by itself):
+    ros2 topic pub --once /sub1/helm/stop std_msgs/msg/Bool "{data: true}"
+Resume (hold the depth it is at now):
+    ros2 topic pub --once /sub1/helm/stop std_msgs/msg/Bool "{data: false}"
+
+The helm reports what it is doing on /sub1/helm/state: HOLDING, STOPPED or NO_POSITION.
+Ctrl+C also stops the thrusters before the program ends.
+
 All topic names below are relative, so the same program works for /sub2, /sub3, ...
 """
 import math
+import signal
+import time
 
 import rclpy
 from nav_msgs.msg import Odometry
+from rclpy.duration import Duration
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float64
+from rclpy.signals import SignalHandlerOptions
+from std_msgs.msg import Bool, Float64, String
 
 RATE = 20.0            # control steps per second
 MIN_DEPTH = 0.3        # shallowest allowed target (m)
@@ -55,11 +67,14 @@ class Helm(Node):
         self.target_yaw = None
         self.target_speed = 0.0
         self.depth_i = 0.0         # memory term of the depth controller
+        self.stopped = False       # True after a stop command: thrusters stay off
         self.steps = 0
 
         self.create_subscription(Odometry, 'odom', self.on_odom, 10)
         self.create_subscription(LaserScan, 'altimeter', self.on_altimeter, 10)
         self.create_subscription(Float64, 'helm/target_depth', self.on_target_depth, 10)
+        self.create_subscription(Bool, 'helm/stop', self.on_stop, 10)
+        self.pub_state = self.create_publisher(String, 'helm/state', 10)
         self.pub = {name: self.create_publisher(Float64, 'thrust/' + name, 10)
                     for name in ('rear_left', 'rear_right', 'vert_front', 'vert_back')}
         self.create_timer(1.0 / RATE, self.step)
@@ -84,9 +99,24 @@ class Helm(Node):
         self.altitude = None if (math.isinf(r) or math.isnan(r)) else r + 0.2   # beam starts 20 cm below centre
 
     def on_target_depth(self, m):
+        if self.stopped:
+            self.get_logger().warn('ignored target depth %.2f m: helm is STOPPED' % m.data)
+            return
         self.target_depth = max(float(m.data), MIN_DEPTH)
         self.depth_i = 0.0
         self.get_logger().info('new target depth: %.2f m' % self.target_depth)
+
+    def on_stop(self, m):
+        if m.data and not self.stopped:
+            self.stopped = True
+            self.get_logger().info('STOP received: thrusters off')
+        elif not m.data and self.stopped:
+            self.stopped = False
+            self.depth_i = 0.0
+            if self.depth is not None:                 # hold where we are now
+                self.target_depth = max(self.depth, MIN_DEPTH)
+                self.target_yaw = self.yaw
+            self.get_logger().info('RESUME received: holding depth %.2f m' % self.target_depth)
 
     # ------------------------------------------------------------ thrusters
     def send(self, surge_force, yaw_torque, heave_force):
@@ -99,15 +129,37 @@ class Helm(Node):
         for name, f in forces.items():
             self.pub[name].publish(Float64(data=float(f)))
 
+    def shutdown_stop(self):
+        """Called when the program ends: send 'thrusters off' and wait until the
+        receiver confirms it got the message. Returns True if confirmed."""
+        confirmed = True
+        for _ in range(5):                     # repeat a few times to be sure
+            self.send(0.0, 0.0, 0.0)
+            time.sleep(0.05)
+        for name, pub in self.pub.items():
+            if pub.get_subscription_count() == 0 or not pub.wait_for_all_acked(Duration(seconds=2.0)):
+                confirmed = False
+                self.get_logger().error('stop NOT confirmed for thruster ' + name)
+        if confirmed:
+            self.get_logger().info('shutdown: stop command confirmed by all 4 thrusters')
+        return confirmed
+
     # --------------------------------------------------------- control step
     def step(self):
+        self.steps += 1
         if self.target_depth is None:
             return
         age = (self.get_clock().now() - self.last_odom).nanoseconds / 1e9
-        if age > ODOM_TIMEOUT:                 # safety: never steer blind
+        blind = age > ODOM_TIMEOUT
+        state = 'STOPPED' if self.stopped else ('NO_POSITION' if blind else 'HOLDING')
+        self.pub_state.publish(String(data=state))
+        if self.stopped or blind:              # safety: thrusters off, sent 20 times a second
             self.send(0.0, 0.0, 0.0)
-            self.get_logger().warn('no position for %.1f s, thrusters off' % age,
-                                   throttle_duration_sec=2.0)
+            if blind:                          # never steer blind
+                self.get_logger().warn('no position for %.1f s, thrusters off' % age,
+                                       throttle_duration_sec=2.0)
+            elif self.steps % int(RATE) == 0:
+                self.get_logger().info('STOPPED depth=%6.2f vz=%+5.2f' % (self.depth, self.vz))
             return
 
         # safety: stay above the seabed (only when the altimeter can see it)
@@ -128,7 +180,6 @@ class Helm(Node):
 
         self.send(surge, yaw_torque, heave)
 
-        self.steps += 1
         if self.steps % int(RATE) == 0:        # one log line per second
             alt = 'none' if self.altitude is None else '%.1f' % self.altitude
             self.get_logger().info(
@@ -137,16 +188,19 @@ class Helm(Node):
 
 
 def main():
-    rclpy.init()
+    # We handle Ctrl+C ourselves, so ROS stays alive long enough to send the stop.
+    rclpy.init(signal_handler_options=SignalHandlerOptions.NO)
+    signal.signal(signal.SIGINT, signal.default_int_handler)    # Ctrl+C, also when started in the background
+    signal.signal(signal.SIGTERM, signal.default_int_handler)   # "kill" behaves like Ctrl+C
     node = Helm()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
-        pass
+        node.get_logger().info('shutdown requested')
     finally:
+        node.shutdown_stop()
         node.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+        rclpy.shutdown()
 
 
 if __name__ == '__main__':
