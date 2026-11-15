@@ -24,6 +24,11 @@
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
+- ros_topic_name: "/SUBNAME/dvl"           # speed over the seabed (needs the seabed within 100 m)
+  gz_topic_name: "/world/lrauv_demo/model/SUBNAME/link/base_link/sensor/dvl/dvl/velocity"
+  ros_type_name: "marine_acoustic_msgs/msg/Dvl"
+  gz_type_name: "gz.msgs.DVLVelocityTracking"
+  direction: GZ_TO_ROS
 - ros_topic_name: "/SUBNAME/camera"        # front camera picture
   gz_topic_name: "/world/lrauv_demo/model/SUBNAME/link/base_link/sensor/camera/image"
   ros_type_name: "sensor_msgs/msg/Image"

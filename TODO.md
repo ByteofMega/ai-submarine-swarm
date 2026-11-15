@@ -29,3 +29,7 @@ depth from a simulated pressure sensor, and the helm using only `/subN/nav/state
 13. **Convoy ship is unchanged from the first version**: it hovers at z = 0.3
     with gravity off and no collisions (planned for step 11).
 14. **The IMU has no noise configured**, so its readings are perfect.
+15. **Gazebo draws its sensors on the main processor** (`llvmpipe`), not on the
+    graphics card. It works, but each sub costs processor time. Check if graphics
+    card drawing can be switched on in WSL, and whether it is worth it.
+16. **The DVL sends 7.4 messages per second**, not the 10 asked for.

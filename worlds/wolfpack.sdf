@@ -32,6 +32,8 @@
     <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
+    <!-- Needed for the DVL speed sensor on each sub -->
+    <plugin filename="gz-sim-dvl-system" name="gz::sim::systems::DopplerVelocityLogSystem"/>
 
     <plugin
       filename="gz-sim-buoyancy-system"

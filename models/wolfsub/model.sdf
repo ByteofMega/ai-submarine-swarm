@@ -97,6 +97,35 @@
         </lidar>
       </sensor>
 
+      <!-- DVL (Doppler velocity log): measures the sub's speed over the seabed
+           with four sound beams pointing down and outwards. Needs the seabed
+           within 100 m. Reports speed in the sub's own frame (x forward, y left, z up). -->
+      <sensor name="dvl" type="custom" gz:type="dvl">
+        <pose>0 0 -0.15 0 0 0</pose>
+        <always_on>1</always_on>
+        <update_rate>10</update_rate>
+        <gz:dvl>
+          <type>phased_array</type>
+          <arrangement degrees="true">
+            <beam id="1"><aperture>2</aperture><rotation>45</rotation><tilt>30</tilt></beam>
+            <beam><aperture>2</aperture><rotation>135</rotation><tilt>30</tilt></beam>
+            <beam><aperture>2</aperture><rotation>-45</rotation><tilt>30</tilt></beam>
+            <beam><aperture>2</aperture><rotation>-135</rotation><tilt>30</tilt></beam>
+          </arrangement>
+          <tracking>
+            <bottom_mode>
+              <when>best</when>
+              <!-- speed error of about 1 cm/s -->
+              <noise type="gaussian"><stddev>0.01</stddev></noise>
+              <visualize>false</visualize>
+            </bottom_mode>
+          </tracking>
+          <resolution>0.01</resolution>
+          <maximum_range>100.</maximum_range>
+          <minimum_range>0.1</minimum_range>
+        </gz:dvl>
+      </sensor>
+
       <!-- IMU: measures tilt and turning speed -->
       <sensor name="imu" type="imu">
         <update_rate>50</update_rate>
