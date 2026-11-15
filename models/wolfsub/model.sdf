@@ -130,6 +130,21 @@
       <sensor name="imu" type="imu">
         <update_rate>50</update_rate>
         <always_on>true</always_on>
+        <!-- Noise, so the readings are imperfect like a real low-cost IMU.
+             stddev = size of the random jitter; bias = a small constant offset
+             that is different in every run. -->
+        <imu>
+          <angular_velocity>   <!-- turning speed, rad/s -->
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev><bias_mean>0.0003</bias_mean><bias_stddev>0.0001</bias_stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev><bias_mean>0.0003</bias_mean><bias_stddev>0.0001</bias_stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.002</stddev><bias_mean>0.0003</bias_mean><bias_stddev>0.0001</bias_stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>   <!-- m/s2 -->
+            <x><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev><bias_mean>0.01</bias_mean><bias_stddev>0.002</bias_stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev><bias_mean>0.01</bias_mean><bias_stddev>0.002</bias_stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>0.02</stddev><bias_mean>0.01</bias_mean><bias_stddev>0.002</bias_stddev></noise></z>
+          </linear_acceleration>
+        </imu>
       </sensor>
     </link>
 

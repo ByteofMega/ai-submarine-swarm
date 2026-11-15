@@ -31,6 +31,15 @@ Not measured yet: more than 2 subs, and the load with the 3D window open.
 - Configured noise: 0.01 m/s. Seabed lock on all 4 beams, at 29 to 33 m from the seabed.
 - Message rate through the bridge: 7.4 per second (10 were asked for).
 
+## IMU noise (sub1 turning slowly, 649 samples, 2026-11-15)
+
+- Turning speed error: average +0.0002 rad/s (the constant offset), jitter 0.0020 rad/s.
+- Vertical acceleration: average 9.810 m/s2, jitter 0.021 m/s2.
+- The IMU's ready-made "orientation" (tilt and heading) has NO noise: it differed
+  from the truth by 0.13 degrees on average, which is explained by the two
+  messages being a few milliseconds apart while the sub was turning.
+  Gazebo's noise settings only cover turning speed and acceleration.
+
 ## LLM (Ollama on Windows, 2026-11-14 and 15)
 
 | | qwen2.5:7b-instruct | qwen2.5:14b-instruct |
